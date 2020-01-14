@@ -13,9 +13,7 @@ public class Visualisation{
     private Map map;
     private Position[][] playground;
 
-    private JPanel buttonPanel;
     private JPanel rightPanel;
-    private JPanel textPanel;
     private JPanel playgroundPanel;
     private JButton startStopButton;
     private JButton resetButton;
@@ -59,8 +57,8 @@ public class Visualisation{
 
     private JPanel makePlaygroundPanel(){
         playgroundPanel = new JPanel();
-        playgroundPanel.setLayout(new GridLayout(map.height, map.width));
-        playgroundPanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5, true));
+        playgroundPanel.setLayout(new GridLayout(Map.height, Map.width));
+        playgroundPanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5, false));
 
 
         for(int i=0; i<Map.width; i++){
@@ -78,33 +76,24 @@ public class Visualisation{
     private JPanel makeRightPanel() {
         rightPanel = new JPanel();
         rightPanel.setLayout(new GridLayout(0, 1));
-        rightPanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5, true));
+        rightPanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5, false));
 
-        textPanel = new JPanel();
-        textPanel.setLayout(new GridLayout(0, 1));
+        rules = new JTextField(map.getRules().toString(), 30);
 
-        rules = new JTextField(map.getRules().toString(), 22);
-
-        textPanel.add(rules);
+        rules.setHorizontalAlignment(JTextField.CENTER);
 
         submitButton = new JButton("SUBMIT");
         submitButton.setBackground(Color.CYAN.darker());
         submitButton.setForeground(Color.BLACK);
-        submitButton.setBorder(BorderFactory.createLineBorder(
-                Color.WHITE, 2, true));
+        submitButton.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3, false));
         submitButton.addActionListener(ae ->{
             map.setRules(rules.getText());
             rules.setText(map.getRules());
             System.out.println(map.getRules());
         });
 
-        textPanel.add(submitButton);
-
-        rightPanel.add(textPanel);
-
-        buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(0, 1));
-        buttonPanel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 5, true));
+        rightPanel.add(rules);
+        rightPanel.add(submitButton);
 
         startStopButton = new JButton("START");
         startStopButton.setBackground(Color.GREEN.darker());
@@ -115,26 +104,17 @@ public class Visualisation{
             {
                 startStopButton.setText("STOP");
                 timer.start();
-                isTimerRunning = true;
-                buttonPanel.revalidate();
-                buttonPanel.repaint();
             }
-            else if (isTimerRunning)
+            else
             {
                 startStopButton.setText("START");
                 timer.stop();
-                isTimerRunning = false;
-                buttonPanel.revalidate();
-                buttonPanel.repaint();
             }
+            isTimerRunning=!isTimerRunning;
+            rightPanel.revalidate();
+            rightPanel.repaint();
         });
-        startStopButton.setBorder(BorderFactory.createLineBorder(
-                Color.WHITE, 4, true));
-        buttonPanel.add(startStopButton);
-
-        //colourButton = new JButton("BALL COLOUR");
-        //colourButton.setBackground(colours[colourCounter]);
-        //colourButton.setForeground(Color.WHITE);
+        startStopButton.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3, false));
 
         resetButton = new JButton( "RESET" );
         resetButton.setOpaque( true );
@@ -142,25 +122,17 @@ public class Visualisation{
         resetButton.setForeground( Color.WHITE );
 
 
-        resetButton.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent ae)
-            {
-                System.out.println("RESET JButton Clicked!");
-                timer.restart();
-                //drawingArea.setForegroundForBall(foregroundColour);
-                map.clear(playground);
-                isTimerRunning=false;
-                timer.stop();
-                startStopButton.setText("START");
-//                timer.start();
-                resetButton.revalidate();
-                resetButton.repaint();
-            }
+        resetButton.addActionListener(ae -> {
+            System.out.println("RESET JButton Clicked!");
+            timer.restart();
+            map.clear(playground);
+            isTimerRunning=false;
+            timer.stop();
+            startStopButton.setText("START");
+            rightPanel.revalidate();
+            rightPanel.repaint();
         });
-        resetButton.setBorder(BorderFactory.createLineBorder(
-                Color.WHITE, 2, true));
-        buttonPanel.add(resetButton);
+        resetButton.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3, false));
 
         exitButton = new JButton("EXIT");
         exitButton.setBackground(Color.RED.darker());
@@ -174,11 +146,12 @@ public class Visualisation{
                 System.exit(0);
             }
         });
-        exitButton.setBorder(BorderFactory.createLineBorder(
-                Color.RED.darker().darker(), 4, true));
-        buttonPanel.add(exitButton);
+        exitButton.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3, false));
 
-        rightPanel.add(buttonPanel);
+        rightPanel.add(startStopButton);
+        rightPanel.add(resetButton);
+        rightPanel.add(exitButton);
+
         return rightPanel;
     }
 }

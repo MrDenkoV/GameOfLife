@@ -29,7 +29,7 @@ public class Position extends JButton {
             currentPosition.revalidate();
             currentPosition.repaint();
         });
-        this.setBorder(BorderFactory.createLineBorder(Color.RED.darker(), 1, true));
+        this.setBorder(BorderFactory.createLineBorder(Color.RED.darker(), 1, false));
     }
 
     public void toggle(){
